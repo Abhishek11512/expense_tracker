@@ -39,27 +39,8 @@
             border: 1px solid #ccc;
             ">
 
-        <button onclick="AddExpenseToBackend()" style="
-            margin: 10px;
-            font-weight: bold;
-            Border: none;
-            padding: 12px 20px;
-            background-color:#28a745;
-            cursor: pointer;
-            border-radius: 6px;
-            color: white;
-            ">Log Expense</button>
-
-        <button onclick="LoadExpenseFromBackend()" style="
-            margin: 10px;
-            font-weight: bold;
-            Border: none;
-            padding: 12px 20px;
-            background-color:#007bff;
-            cursor: pointer;
-            border-radius: 6px;
-            color: white;
-            ">Refresh History</button>
+        <button onclick="AddExpenseToBackend()" class="btn-success">Log Expense</button>
+        <button onclick="LoadExpenseFromBackend()" class="btn-primary">Refresh History</button>
 
         <table id="expenseTable" style="
             width: 100%;

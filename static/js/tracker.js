@@ -1,3 +1,5 @@
+const MONTHLY_BUDGET_CEILING = 10000;
+
 async function LoadExpenseFromBackend() {
   const res = await fetch("/api/expense");
   const data = await res.json();
@@ -5,35 +7,28 @@ async function LoadExpenseFromBackend() {
   const totalDisplay = document.getElementById("totalDisplay");
   tbody.innerHTML = "";
   totalDisplay.textContent = data.total;
+  let fillPercentage = (data.total / MONTHLY_BUDGET_CEILING) * 100;
+  if (fillPercentage > 100) fillPercentage = 100;
+  const bar = document.getElementById('progressBar');
+  bar.style.width = fillPercentage + "%";
+  if (fillPercentage >= 80) {
+    bar.style.backgroundColor = "#dc3545"
+  } else {
+    bar.style.backgroundColor = "#007bff"
+  }
 
   data.expenses.forEach((expense) => {
     const row = document.createElement("tr");
     row.style.borderBottom = "1px solid #ddd";
 
-    const tdId = document.createElement("td");
-    tdId.textContent = expense.id;
-    tdId.style.padding = "10px";
-
-    const tdItem = document.createElement("td");
-    tdItem.textContent = expense.item;
-    tdItem.style.padding = "10px";
-
-    const tdAmount = document.createElement("td");
-    tdAmount.textContent = expense.amount;
-    tdAmount.style.padding = "10px";
-
-    const tdCategory = document.createElement("td");
-    tdCategory.textContent = expense.category;
-    tdCategory.style.padding = "10px";
+    const tdId = createCell(expense.id);
+    const tdItem = createCell(expense.item);
+    const tdAmount = createCell(expense.amount);
+    const tdCategory = createCell(expense.category);
 
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
-    deleteBtn.style.backgroundColor = "#dc3545";
-    deleteBtn.style.color = "white";
-    deleteBtn.style.border = "none";
-    deleteBtn.style.padding = "6px 12px";
-    deleteBtn.style.borderRadius = "4px";
-    deleteBtn.style.cursor = "pointer";
+    deleteBtn.className = "delete-btn";
     deleteBtn.onclick = () => deleteExpenseFromBackend(expense.id);
 
     const tdAction = document.createElement("td");
@@ -94,4 +89,12 @@ async function deleteExpenseFromBackend(expenseId) {
   } else {
     alert("Failed to delete expense!!");
   }
+}
+
+//Function to optimise cell creation
+function createCell(text) {
+  const td = document.createElement('td');
+  td.textContent = text;
+  td.style.padding = '10px';
+  return td; // Sends completed cell back to the loop
 }

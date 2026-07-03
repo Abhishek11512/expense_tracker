@@ -21,3 +21,52 @@ li {
     list-style: none;
     border: gray 1px solid;
 }
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.delete-btn:hover {
+    background-color: #bd2130;
+}
+
+.btn-primary,
+.btn-success {
+    font-weight: bold;
+    border: none;
+    padding: 12px 20px;
+    cursor: pointer;
+    border-radius: 6px;
+    color: white;
+    margin: 10px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-success {
+    background-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-primary {
+    background-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0069d9;
+}
+
+.btn-primary:active,
+.btn-success:active,
+.delete-btn:active {
+    transform: scale(0.96);
+}
