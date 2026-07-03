@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang = en>
+    <head>
+        <meta charset = 'UTF-8'>
+        <title>Expense Tracker System</title>
+        <style>
+            body {
+                background-color: #eef2f3;
+                font-family: Arial, sans-serif;
+                margin: 50px;
+                text-align: center;
+            }
+
+            .Tracker-card {
+                background: #ffffff;
+                padding: 30px;
+                border-radius: 12px;
+                max-width: 450px;
+                margin: 50px auto;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                border: 1px solid gray;
+            }
+
+            li {
+                background-color: #e9f0f1;
+                padding: 10px;
+                list-style: none;
+                border: gray 1px solid;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="Tracker-card">
+            <h1> Welcome to the Expense Tracker</h1>
+            <h2>Total Spent: &#8377;<span id="totalDisplay">0</span></h2>
+            <p>Enter the fresh expense details below to note it down! or Pull data using the Refresh Button!</p>
+            <input type="text" 
+            id="itemField" 
+            placeholder="Enter Item Name..." 
+            style= "margin: 10px auto;
+            padding: 12px;
+            width: 90%;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            ">
+
+            <input type="number" 
+            id="amountField" 
+            placeholder="Enter Amount..."
+            style="margin: 10px auto;
+            padding: 12px;
+            width: 90%;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            ">
+
+            <input type="text" 
+            id="categoryField" 
+            placeholder="Enter Category Name..."
+            style="margin: 10px auto;
+            padding: 12px;
+            width: 90%;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            ">
+
+            <button onclick="AddExpenseToBackend()" style="
+            margin: 10px;
+            font-weight: bold;
+            Border: none;
+            padding: 12px 20px;
+            background-color:#28a745;
+            cursor: pointer;
+            border-radius: 6px;
+            color: white;
+            ">Log Expense</button>
+
+            <button onclick="LoadExpenseFromBackend()" style="
+            margin: 10px;
+            font-weight: bold;
+            Border: none;
+            padding: 12px 20px;
+            background-color:#007bff;
+            cursor: pointer;
+            border-radius: 6px;
+            color: white;
+            ">Refresh History</button>
+
+            <table id="expenseTable" style="
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+            text-align: Left;">
+
+            <thead>
+                <tr style="
+                    background-color: #501fa3;
+                    color: white;">
+                    <th style="padding: 10px;border-radius:4px 0 0 4px;">ID</th>
+                    <th style="padding: 10px;">Item Name</th>
+                    <th style="padding: 10px;">Amount</th>
+                    <th style="padding: 10px;">Category</th>
+                    <th style="padding:10px; border-radius: 0 4px 4px 0; ">Action</th>
+                </tr>
+            </thead>
+            <tbody id="expenseTableBody"></tbody>            
+        </table>
+        </div>
+        <script>
+            async function LoadExpenseFromBackend() {
+                const res = await fetch('/api/expense')
+                const data = await res.json();
+                const tbody = document.getElementById('expenseTableBody');
+                const totalDisplay = document.getElementById('totalDisplay');
+                tbody.innerHTML = '';
+                totalDisplay.textContent = data.total;
+                data.expenses.forEach((expense) => {
+                    const row = document.createElement('tr');
+                    row.style.borderBottom = '1px solid #ddd';
+                    
+                    const tdId = document.createElement('td');
+                    tdId.textContent = expense.id;
+                    tdId.style.padding = '10px';
+                    
+                    const tdItem = document.createElement('td');
+                    tdItem.textContent = expense.item;
+                    tdItem.style.padding = '10px';
+
+                    const tdAmount = document.createElement('td');
+                    tdAmount.textContent = expense.amount;
+                    tdAmount.style.padding = '10px';
+
+                    const tdCategory = document.createElement('td');
+                    tdCategory.textContent = expense.category;
+                    tdCategory.style.padding = '10px';
+
+                    const deleteBtn = document.createElement('button')
+                    deleteBtn.textContent = "Delete";
+                    deleteBtn.style.backgroundColor = "#dc3545";
+                    deleteBtn.style.color = "white";
+                    deleteBtn.style.border = "none";
+                    deleteBtn.style.padding = "6px 12px";
+                    deleteBtn.style.borderRadius = "4px";
+                    deleteBtn.style.cursor = "pointer";
+                    deleteBtn.onclick = () => deleteExpenseFromBackend(expense.id);
+
+                    const tdAction = document.createElement('td');
+                    tdAction.style.padding = "10px";
+                    tdAction.appendChild(deleteBtn);
+                    
+
+                    row.appendChild(tdId);
+                    row.appendChild(tdItem);
+                    row.appendChild(tdAmount);
+                    row.appendChild(tdCategory);
+                    row.appendChild(tdAction);
+
+                    tbody.appendChild(row);
+
+                });
+            }
+
+            async function AddExpenseToBackend() {
+                const item = document.getElementById('itemField').value.trim();
+                const amount = document.getElementById('amountField').value.trim();
+                const category = document.getElementById('categoryField').value.trim();
+
+                if (!item || !category || !amount) {
+                    return alert("Please Enter the Data First!");
+                }
+
+                const res = await fetch('/api/add_expense', {
+                    method: 'POST',
+                    headers: {'Content-type' : 'application/json'},
+                    body: JSON.stringify({
+                        item: item,
+                        amount: amount,
+                        category: category
+                    })
+                });
+
+                if (res.ok) {
+                    alert("Expense Logged Successfully!")
+                    document.getElementById('itemField').value = '';
+                    document.getElementById('amountField').value = '';
+                    document.getElementById('categoryField').value = '';
+                    LoadExpenseFromBackend();
+                }
+                else {
+                    alert("Failed to log expense!!")
+                }
+            }
+
+            async function deleteExpenseFromBackend(expenseId) {
+                if (!confirm("Are you sure you want to delete the record?")) return;
+
+                const res = await fetch('/api/delete_expense', {
+                    method: 'POST',
+                    headers: {'Content-Type' : 'application/json'},
+                    body: JSON.stringify({ id: expenseId })        
+                });
+
+                if(res.ok) {
+                    LoadExpenseFromBackend();
+                } else {
+                    alert("Failed to delete expense!!")
+                }
+            }
+        </script>
+    </body>
+</html>
