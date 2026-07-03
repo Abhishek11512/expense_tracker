@@ -11,6 +11,12 @@
     <div class="Tracker-card">
         <h1> Welcome to the Expense Tracker</h1>
         <h2>Total Spent: &#8377;<span id="totalDisplay">0</span></h2>
+        <div
+            style="height: 16px;background-color: #e0e0e0;width:90%; margin:15px auto; border-radius: 8px; overflow: hidden;">
+            <div id="progressBar"
+                style="height: 100%; width:0%; background-color: #007bff; transition: width 0.4s ease, background-color 0.4s ease;">
+            </div>
+        </div>
         <p>Enter the fresh expense details below to note it down! or Pull data using the Refresh Button!</p>
         <input type="text" id="itemField" placeholder="Enter Item Name..." style="margin: 10px auto;
             padding: 12px;
