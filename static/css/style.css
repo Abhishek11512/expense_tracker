@@ -1,0 +1,23 @@
+body {
+    background-color: #eef2f3;
+    font-family: Arial, sans-serif;
+    margin: 50px;
+    text-align: center;
+}
+
+.Tracker-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 450px;
+    margin: 50px auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid gray;
+}
+
+li {
+    background-color: #e9f0f1;
+    padding: 10px;
+    list-style: none;
+    border: gray 1px solid;
+}
