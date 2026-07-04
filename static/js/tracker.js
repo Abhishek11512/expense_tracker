@@ -6,7 +6,11 @@ async function LoadExpenseFromBackend() {
   const tbody = document.getElementById("expenseTableBody");
   const totalDisplay = document.getElementById("totalDisplay");
   tbody.innerHTML = "";
-  totalDisplay.textContent = data.total;
+  const formattedTotal = Number(data.total).toLocaleString('en-IN', {
+    style: 'currency',
+    currency: 'INR'
+  });
+  totalDisplay.textContent = formattedTotal;
   let fillPercentage = (data.total / MONTHLY_BUDGET_CEILING) * 100;
   if (fillPercentage > 100) fillPercentage = 100;
   const bar = document.getElementById('progressBar');
@@ -21,9 +25,14 @@ async function LoadExpenseFromBackend() {
     const row = document.createElement("tr");
     row.style.borderBottom = "1px solid #ddd";
 
+    const formattedAmount = Number(expense.amount).toLocaleString('en-IN', {
+      style: 'currency',
+      currency: 'INR'
+    });
+
     const tdId = createCell(expense.id);
     const tdItem = createCell(expense.item);
-    const tdAmount = createCell(expense.amount);
+    const tdAmount = createCell(formattedAmount);
     const tdCategory = createCell(expense.category);
 
     const deleteBtn = document.createElement("button");
@@ -91,7 +100,7 @@ async function deleteExpenseFromBackend(expenseId) {
   }
 }
 
-//Function to optimise cell creation
+//DOM factory function to optimise cell creation
 function createCell(text) {
   const td = document.createElement('td');
   td.textContent = text;
