@@ -1,3 +1,5 @@
+![Status](https://shields.io)
+
 # 📊 Smart Expense & Budget Tracker
 
 A highly optimized, professional full-stack web application designed to help users track personal finances and monitor monthly spending constraints in real time. Built from scratch with a robust Python backend and a responsive, modular frontend interface.
