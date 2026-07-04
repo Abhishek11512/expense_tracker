@@ -1,4 +1,4 @@
-![Status](https://shields.io)
+![Status](https://img.shields.io/badge/github-repo-blue?logo=github)
 
 # 📊 Smart Expense & Budget Tracker
 
